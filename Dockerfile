@@ -4,9 +4,7 @@ FROM jetbrains/teamcity-server AS teamcity
 RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar https://jdbc.postgresql.org/download/postgresql-42.2.16.jar && \
     echo "6d02942406e92153c6675617dade3524 /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar" | md5sum -c -
 
-RUN install -o tcuser -g tcuser -d /data -d /data/logs -d /data/datadir -d /data/temp
-
-ENV TEAMCITY_DATA_PATH=/data/datadir TEAMCITY_LOGS_PATH=/data/logs TEAMCITY_LOGS=/data/logs TEAMCITY_TEMP=/data/temp
+RUN install -o tcuser -g tcuser -d /data
 
 # USER tcuser
 WORKDIR /opt/teamcity

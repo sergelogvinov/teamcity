@@ -41,3 +41,11 @@ push: ## Push image to registry
 	docker tag local/teamcity:$(CODE_TAG) $(REGISTRY)/teamcity-agent:$(CODE_TAG)
 	docker push $(REGISTRY)/teamcity-agent:$(CODE_TAG)
 
+
+deploy:
+	touch .helm/teamcity/values-dev.yaml
+	helm upgrade -i $(HELM_PARAMS) -f .helm/teamcity/values-dev.yaml \
+		--history-max 3 \
+		--set server.image.tag=$(CODE_TAG) \
+		teamcity .helm/teamcity/
+
