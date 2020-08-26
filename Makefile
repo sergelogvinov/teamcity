@@ -24,9 +24,13 @@ build: ## Build project
 
 
 run: ## Run locally
-	docker rm -f teamcity 2>/dev/null ||:
-	docker run --rm -ti --name teamcity -h local \
-		-e DOCKER_HOST=$(DOCKER_HOST) \
+	docker rm -f teamcity psql 2>/dev/null ||:
+
+	docker run -d --name psql -e POSTGRES_PASSWORD=teamcity -e POSTGRES_DB=teamcity -e POSTGRES_USER=teamcity \
+		-p 5432:5432 -p 8111:8111 postgres:11.8 >/dev/null
+	docker exec -i psql sh -c "while ! psql -h 127.0.0.1 -U teamcity teamcity -tAc 'SELECT 1;' >/dev/null 2>/dev/null; do sleep 1; done"
+
+	docker run -ti --rm --name teamcity --network=container:psql \
 		local/teamcity:$(CODE_TAG)
 
 
