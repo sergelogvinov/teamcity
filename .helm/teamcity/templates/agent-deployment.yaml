@@ -1,0 +1,86 @@
+{{- if .Values.agent.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "teamcity.fullname" . }}-agent
+  labels:
+    {{- include "teamcity.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.agent.replicaCount }}
+  strategy:
+    type: {{ .Values.agent.updateStrategy.type }}
+  selector:
+    matchLabels:
+      {{- include "teamcity.selectorLabels" . | nindent 6 }}
+      type: agent
+  template:
+    metadata:
+    {{- with .Values.agent.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "teamcity.selectorLabels" . | nindent 8 }}
+        type: agent
+    spec:
+      enableServiceLinks: false
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "teamcity.agent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.agent.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-agent
+          securityContext:
+            {{- toYaml .Values.agent.securityContext | nindent 12 }}
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          env:
+            - name: SERVER_URL
+              value: http://{{ include "teamcity.fullname" . }}:{{ .Values.service.port }}
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          envFrom:
+            - secretRef:
+                name: "{{ include "teamcity.fullname" . }}-agent-envs"
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          volumeMounts:
+            - name: files
+              mountPath: {{ .Values.agent.extraFilesMounts.mountPath }}
+          {{- if .Values.agent.extraVolumeMounts }}
+            {{ toYaml .Values.agent.extraVolumeMounts | nindent 12 }}
+          {{- end }}
+            - name: work
+              mountPath: /opt/buildagent/work
+          resources:
+            {{- toYaml .Values.agent.resources | nindent 12 }}
+      {{- with .Values.agent.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: files
+          secret:
+            secretName: {{ include "teamcity.fullname" . }}-agent
+            defaultMode: 256
+      {{- if .Values.agent.extraVolumes }}
+        {{ toYaml .Values.agent.extraVolumes | nindent 8 }}
+      {{- end }}
+        - name: work
+          emptyDir: {}
+{{- end }}

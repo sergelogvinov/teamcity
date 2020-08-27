@@ -16,7 +16,7 @@ server:
     tag: ""
 
   updateStrategy:
-    type: RollingUpdate
+    type: Recreate
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -62,7 +62,77 @@ server:
 
   affinity: {}
 
+agent:
+  enabled: true
 
+  image:
+    repository: docker.pkg.github.com/sergelogvinov/teamcity/teamcity-agent
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  replicaCount: 0
+
+  envs: {}
+    # DOCKER_TLS_VERIFY: "1"
+    # DOCKER_BUILDKIT: "1"
+    # DOCKER_HOST: tcp://docker:2376
+
+  updateStrategy:
+    type: Recreate
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  rbac:
+    create: true
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+          - services
+          - deployments
+        verbs:
+          - get
+          - list
+
+  podAnnotations: {}
+
+  podSecurityContext:
+    fsGroup: 1000
+
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+
+  resources:
+    limits:
+      memory: 768Mi
+      cpu: 1
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  extraVolumeMounts: []
+
+  extraVolumes: []
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
 
 service:
   type: ClusterIP

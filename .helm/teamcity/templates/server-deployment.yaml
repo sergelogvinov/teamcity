@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "teamcity.selectorLabels" . | nindent 6 }}
+      type: server
   template:
     metadata:
     {{- with .Values.server.podAnnotations }}
@@ -20,17 +21,18 @@ spec:
     {{- end }}
       labels:
         {{- include "teamcity.selectorLabels" . | nindent 8 }}
+        type: server
     spec:
       enableServiceLinks: false
-      {{- with .Values.server.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "teamcity.serviceAccountName" . }}
+      serviceAccountName: {{ include "teamcity.server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-server
           securityContext:
             {{- toYaml .Values.server.securityContext | nindent 12 }}
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"

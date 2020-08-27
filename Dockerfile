@@ -11,10 +11,10 @@ WORKDIR /opt/teamcity
 CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 #
-FROM jetbrains/teamcity-agent  AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent  AS teamcity-agent
 
 USER root
-RUN apt-get update && apt-get install -y software-properties-common vim curl wget git make zip rsync && \
+RUN apt-get update && apt-get install -y software-properties-common vim curl wget git make zip rsync docker.io && \
     apt-add-repository ppa:ansible/ansible && apt-get update -y && \
     apt-get install -y ansible && \
     apt-get install -y python-pip python-netaddr python-boto python-jmespath && \
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
-    chown -R buildagent.buildagent /opt/buildagent /home/buildagent /services
+    chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
 RUN wget https://dl.k8s.io/v1.18.8/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \

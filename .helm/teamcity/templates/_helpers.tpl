@@ -53,10 +53,18 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "teamcity.serviceAccountName" -}}
+{{- define "teamcity.server.serviceAccountName" -}}
 {{- if .Values.server.serviceAccount.create }}
 {{- default (include "teamcity.fullname" .) .Values.server.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.server.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{- define "teamcity.agent.serviceAccountName" -}}
+{{- if .Values.agent.serviceAccount.create }}
+{{- default (printf "%s-agent" (include "teamcity.fullname" .)) .Values.agent.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.agent.serviceAccount.name }}
 {{- end }}
 {{- end }}
