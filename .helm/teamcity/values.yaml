@@ -51,7 +51,7 @@ server:
   persistentVolume:
     enabled: true
     annotations: {}
-    size: 1Gi
+    size: 10Gi
     accessModes:
       - ReadWriteOnce
     existingClaim: ''
