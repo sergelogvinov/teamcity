@@ -8,7 +8,7 @@ on:
     # types: [closed]
 
 env:
-  CODE_TAG: ${{ github.head_ref::8 }}
+  CODE_TAG: $( echo ${github.head_ref} | cut -c9- )
   REGISTRY: docker.pkg.github.com/${{ github.repository }}
 
 jobs:
