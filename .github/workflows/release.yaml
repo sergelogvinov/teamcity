@@ -50,7 +50,7 @@ jobs:
           ref: 'master'
       - name: Build
         run: make build
-      - name: Docker registry login
+      - name: Github registry login
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.REGISTRY }}
@@ -58,3 +58,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push images to github
         run: make push
+
+      - name: Docker registry login
+        uses: azure/docker-login@v1
+        with:
+          login-server: index.docker.io
+          username: ${{ secrets.DOCKERIO_USERNAME }}
+          password: ${{ secrets.DOCKERIO_PASSWORD }}
+      - name: Push images to github
+        run: make push
+        env:
+          REGISTRY: index.docker.io
