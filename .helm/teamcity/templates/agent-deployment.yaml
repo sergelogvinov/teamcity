@@ -52,8 +52,10 @@ spec:
               containerPort: 9090
               protocol: TCP
           volumeMounts:
+          {{- if .Values.agent.extraFilesMounts }}
             - name: files
               mountPath: {{ .Values.agent.extraFilesMounts.mountPath }}
+          {{- end }}
           {{- if .Values.agent.extraVolumeMounts }}
             {{ toYaml .Values.agent.extraVolumeMounts | nindent 12 }}
           {{- end }}
@@ -74,10 +76,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.agent.extraFilesMounts }}
         - name: files
           secret:
             secretName: {{ include "teamcity.fullname" . }}-agent
             defaultMode: 256
+      {{- end }}
       {{- if .Values.agent.extraVolumes }}
         {{ toYaml .Values.agent.extraVolumes | nindent 8 }}
       {{- end }}
