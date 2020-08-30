@@ -66,6 +66,8 @@ jobs:
           login-server: index.docker.io
           username: sergelog
           password: ${{ secrets.DOCKERIO_PASSWORD }}
+        env:
+          REGISTRY: sergelog
       - name: Push images to docker hub
         run: make push
         env:
