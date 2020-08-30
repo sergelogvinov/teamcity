@@ -61,9 +61,8 @@ jobs:
         run: make push
 
       - name: Docker registry login
-        uses: azure/docker-login@v1
+        uses: docker/login-action@v1
         with:
-          login-server: docker.io
           username: sergelog
           password: ${{ secrets.DOCKERIO_PASSWORD }}
         env:
