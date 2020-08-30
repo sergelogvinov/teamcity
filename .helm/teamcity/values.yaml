@@ -15,6 +15,8 @@ server:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
+  configDb: []
+
   updateStrategy:
     type: Recreate
 
@@ -54,6 +56,7 @@ server:
     size: 10Gi
     accessModes:
       - ReadWriteOnce
+    storageClass: ''
     existingClaim: ''
 
   nodeSelector: {}
@@ -133,6 +136,15 @@ agent:
   tolerations: []
 
   affinity: {}
+
+volumePermissions:
+  enabled: true
+  image:
+    image: busybox
+    imageTag: latest
+    pullPolicy: IfNotPresent
+  securityContext:
+    runAsUser: 0
 
 service:
   type: ClusterIP
