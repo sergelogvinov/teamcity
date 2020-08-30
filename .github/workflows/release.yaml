@@ -63,7 +63,7 @@ jobs:
       - name: Docker registry login
         uses: azure/docker-login@v1
         with:
-          login-server: index.docker.io
+          login-server: docker.io
           username: sergelog
           password: ${{ secrets.DOCKERIO_PASSWORD }}
         env:
