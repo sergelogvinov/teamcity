@@ -1,3 +1,8 @@
-## Welcome to GitHub Pages
+## Welcome to helm chart for deploy teamcity on k8s
 
-You can use the [editor on GitHub](https://github.com/sergelogvinov/teamcity/edit/gh-pages/README.md) to maintain and preview the content for your website in Markdown files.
+## Installation
+
+```console
+helm repo add teamcity https://sinextra.dev/teamcity
+helm search repo teamcity
+```
