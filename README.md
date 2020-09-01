@@ -11,6 +11,7 @@ make build push
 
 Add custom parameters to file .helm/teamcity/values-dev.yaml
 and deploy teamcity to kubernetes
+
 ```console
 make deploy
 ```
