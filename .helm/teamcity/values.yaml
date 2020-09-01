@@ -55,7 +55,6 @@ server:
   ##
   securityContext:
     runAsUser: 1000
-    runAsNonRoot: true
     runAsGroup: 1000
     # capabilities:
     #   drop:
@@ -205,8 +204,8 @@ agent:
   ##
   resources:
     limits:
+      cpu: 2
       memory: 1Gi
-      cpu: 1
     requests:
       cpu: 500m
       memory: 512Mi
