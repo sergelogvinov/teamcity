@@ -166,17 +166,19 @@ agent:
   rbac:
     ## If true, teamcity agent rbac rules will be created
     ##
-    create: true
-    rules:
-      - apiGroups:
-          - ""
-        resources:
-          - pods
-          - services
-          - deployments
-        verbs:
-          - get
-          - list
+    create: false
+
+    rules: []
+    # rules:
+    #   - apiGroups:
+    #       - ""
+    #     resources:
+    #       - pods
+    #       - services
+    #       - deployments
+    #     verbs:
+    #       - get
+    #       - list
 
   ## Annotations to be added to teamcity agent pods
   ##
@@ -263,7 +265,6 @@ volumePermissions:
 ## teamcity service configuration
 service:
   type: ClusterIP
-  # clusterIP: None
   port: 80
 
 ingress:

@@ -60,7 +60,7 @@ Parameter | Description | Default
 `server.persistentVolume.existingClaim` | server data Persistent Volume existing claim name | `""`
 `server.persistentVolume.size` | server data Persistent Volume size | `10Gi`
 `server.persistentVolume.storageClass` | server data Persistent Volume Storage Class | `""`
-`server.configDb` | server database properties | `""`
+`server.configDb` | server [database properties](https://www.jetbrains.com/help/teamcity/setting-up-an-external-database.html) | `""`
 `ingress.enabled` | If true, teamcity server Ingress will be created | `false`
 `ingress.annotations` | teamcity server Ingress annotations | `[]`
 `ingress.hosts` | teamcity server Ingress hostnames | `[]`
@@ -92,8 +92,8 @@ Parameter | Description | Default
 `agent.nodeSelector` | node labels for agent pod assignment | `{}`
 `agent.tolerations` | node taints to tolerate | `[]`
 `agent.affinity` | pod affinity | `{}`
-`agent.extraVolumeMounts` | | `[]`
-`agent.extraVolumes` |  | `[]`
+`agent.extraVolumeMounts` | extra volume mounts for the pod | `[]`
+`agent.extraVolumes` | additional volumes for the pod | `[]`
 `agent.envs` | agent environment variables | `{}`
 `agent.rbac.create` | If true, create & use RBAC resources | `false`
-`agent.rbac.rules` | | `{}`
+`agent.rbac.rules` | RBAC rules | `[]`
