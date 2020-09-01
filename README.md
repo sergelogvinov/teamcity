@@ -8,9 +8,10 @@ Build you own images and push it to registry
 export REGISTRY=my_docker_account
 make build push
 ```
+
 Add custom parameters to file .helm/teamcity/values-dev.yaml
 and deploy teamcity to kubernetes
-```
+```console
 make deploy
 ```
 
