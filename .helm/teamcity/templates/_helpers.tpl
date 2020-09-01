@@ -68,3 +68,16 @@ Create the name of the service account to use
 {{- default "default" .Values.agent.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the database.properties file
+*/}}
+{{- define "teamcity.server.databaseProperties" -}}
+{{- if .Values.postgresql.enabled }}
+connectionProperties.user={{ .Values.postgresql.postgresqlUsername }}
+connectionUrl=jdbc\:postgresql\://{{ include "teamcity.fullname" . }}-postgresql/{{ .Values.postgresql.postgresqlDatabase }}
+connectionProperties.password={{ .Values.postgresql.postgresqlPassword }}
+{{- else }}
+{{ .Values.server.configDb | default "" }}
+{{- end }}
+{{- end }}

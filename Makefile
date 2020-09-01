@@ -44,6 +44,7 @@ push: ## Push image to registry
 
 deploy:
 	touch .helm/teamcity/values-dev.yaml
+	helm dependency update .helm/teamcity/
 	helm upgrade -i $(HELM_PARAMS) -f .helm/teamcity/values-dev.yaml \
 		--history-max 3 \
 		--set server.image.tag=$(CODE_TAG) \

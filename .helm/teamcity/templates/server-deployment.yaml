@@ -31,7 +31,7 @@ spec:
       serviceAccountName: {{ include "teamcity.server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
-      {{- if .Values.volumePermissions.enabled }}
+      {{- if or .Values.volumePermissions.enabled .Values.postgresql.enabled .Values.server.configDb  }}
       initContainers:
         - name: init-chmod-data
           image: "{{ .Values.volumePermissions.image.image }}:{{ .Values.volumePermissions.image.imageTag }}"
@@ -82,7 +82,7 @@ spec:
               mountPath: /opt/teamcity/temp
             - name: data
               mountPath: /data
-          {{- if .Values.server.configDb }}
+          {{- if or .Values.server.configDb .Values.postgresql.enabled }}
             - name: config
               mountPath: /data/datadir/config/database.properties
               subPath: database.properties
@@ -114,7 +114,7 @@ spec:
       {{- else }}
           emptyDir: {}
       {{- end }}
-      {{- if .Values.server.configDb }}
+      {{- if or .Values.server.configDb .Values.postgresql.enabled }}
         - name: config
           secret:
             secretName: {{ template "teamcity.fullname" . }}-db

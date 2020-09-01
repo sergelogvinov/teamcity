@@ -1,4 +1,7 @@
 #
+.helm/teamcity/Chart.lock
+.helm/teamcity/charts/
+#
 .cr-index/
 .cr-release-packages/
 .helm/teamcity/values-dev.yaml

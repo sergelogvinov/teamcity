@@ -162,3 +162,11 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+# PostgreSQL chart documentation:
+# https://github.com/helm/charts/blob/master/stable/postgresql/README.md
+postgresql:
+  enabled: false
+  postgresqlDatabase: teamcity
+  postgresqlUsername: teamcity
+  postgresqlPassword: teamcity
