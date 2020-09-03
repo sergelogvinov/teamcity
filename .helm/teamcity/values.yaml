@@ -66,8 +66,8 @@ server:
   ##
   resources:
     # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: 2
+    #   memory: 4Gi
     requests:
       cpu: 500m
       memory: 1Gi
@@ -203,9 +203,9 @@ agent:
   ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
   resources:
-    limits:
-      cpu: 2
-      memory: 1Gi
+    # limits:
+    #   cpu: 2
+    #   memory: 1Gi
     requests:
       cpu: 500m
       memory: 512Mi
