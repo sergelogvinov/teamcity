@@ -7,16 +7,29 @@ nameOverride: ""
 fullnameOverride: ""
 
 server:
+  ## If false, teamcity server will not be installed
+  ##
   enabled: true
 
+  ## teamcity container image
+  ##
   image:
     repository: sergelog/teamcity
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
+  ## teamcity database properties
+  ## https://www.jetbrains.com/help/teamcity/setting-up-an-external-database.html
+  ##
   configDb: []
+  # configDb: |
+  #   connectionUrl=jdbc:postgresql://<host>:5432/<database_name>
+  #   connectionProperties.user=<username>
+  #   connectionProperties.password=<password>
+  #   maxConnections=10
 
+  ## teamcity Deployment Strategy type
   updateStrategy:
     type: Recreate
 
@@ -29,11 +42,17 @@ server:
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
+  ## Annotations to be added to teamcity pods
+  ##
   podAnnotations: {}
 
+  ## Pod security context to be added to teamcity pods
+  ##
   podSecurityContext:
     fsGroup: 1000
 
+  ## Security context to be added to teamcity pods
+  ##
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -42,30 +61,73 @@ server:
     #   - ALL
     # readOnlyRootFilesystem: true
 
+  ## teamcity resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
   resources:
     # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
+    #   cpu: 2
+    #   memory: 4Gi
     requests:
       cpu: 500m
       memory: 1Gi
 
   persistentVolume:
+    ## If true, teamcity will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
     enabled: true
+
+    ## teamcity data Persistent Volume Claim annotations
+    ##
     annotations: {}
-    size: 10Gi
+
+    ## teamcity data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
     accessModes:
       - ReadWriteOnce
+
+    ## teamcity data Persistent Volume size
+    ##
+    size: 10Gi
+
+    ## teamcity data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
     storageClass: ''
+
+    ## teamcity data Persistent Volume existing claim name
+    ## Requires teamcity.persistentVolume.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
     existingClaim: ''
 
+  ## Node labels for teamcity pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
   nodeSelector: {}
 
+  ## Node tolerations for teamcity scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
   tolerations: []
+    # - key: "key"
+    #   operator: "Equal|Exists"
+    #   value: "value"
+    #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
+  ## Pod affinity
+  ##
   affinity: {}
 
 agent:
+  ## If true, teamcity agent deployment will be installed
+  ##
   enabled: true
 
   image:
@@ -74,13 +136,20 @@ agent:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
+  ## Use a deployment if you want to start teamcity agents by yourself
+  ## Teamcity can run agents by demand
+  ##
   replicaCount: 0
 
+  ## teamcity agent environment variables
+  ##
   envs: {}
     # DOCKER_TLS_VERIFY: "1"
     # DOCKER_BUILDKIT: "1"
-    # DOCKER_HOST: tcp://docker:2376
+    # DOCKER_HOST: tcp://docker-host:2376
+    # SECRET_TOKEN: "secret"
 
+  ## teamcity agent Deployment Strategy type
   updateStrategy:
     type: Recreate
 
@@ -94,49 +163,95 @@ agent:
     name: ""
 
   rbac:
-    create: true
-    rules:
-      - apiGroups:
-          - ""
-        resources:
-          - pods
-          - services
-          - deployments
-        verbs:
-          - get
-          - list
+    ## If true, teamcity agent rbac rules will be created
+    ##
+    create: false
 
+    rules: []
+    # rules:
+    #   - apiGroups:
+    #       - ""
+    #     resources:
+    #       - pods
+    #       - services
+    #       - deployments
+    #     verbs:
+    #       - get
+    #       - list
+
+  ## Annotations to be added to teamcity agent pods
+  ##
   podAnnotations: {}
 
+  ## Pod security context to be added to teamcity agent pods
+  ##
   podSecurityContext:
     fsGroup: 1000
 
+  ## Security context to be added to teamcity agent pods
+  ##
   securityContext:
     runAsUser: 1000
+    runAsNonRoot: true
     runAsGroup: 1000
     # capabilities:
     #   drop:
     #   - ALL
     # readOnlyRootFilesystem: true
 
+  ## teamcity agent resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
   resources:
-    limits:
-      memory: 768Mi
-      cpu: 1
+    # limits:
+    #   cpu: 2
+    #   memory: 1Gi
     requests:
       cpu: 500m
       memory: 512Mi
 
+  ## extraVolumes and extraVolumeMounts allows you to mount other volumes to agent pod
+  ##
   extraVolumeMounts: []
-
   extraVolumes: []
+  # extraVolumeMounts:
+  #   - name: certs
+  #     mountPath: /home/buildagent/.docker
+  # extraVolumes:
+  #   - name: certs
+  #     secret:
+  #       defaultMode: 256
+  #       items:
+  #       - key: ca.crt
+  #         path: ca.pem
+  #       - key: tls.crt
+  #         path: cert.pem
+  #       - key: tls.key
+  #         path: key.pem
+  #       secretName: docker-tls
 
+  ## Node labels for teamcity agent pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
   nodeSelector: {}
 
+  ## Node tolerations for teamcity agent scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
   tolerations: []
+    # - key: "key"
+    #   operator: "Equal|Exists"
+    #   value: "value"
+    #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
+  ## Pod affinity
+  ##
   affinity: {}
 
+##
+## Init containers parameters:
+## volumePermissions: Change the owner of the persist volume mountpoint to RunAsUser:fsGroup
+##
 volumePermissions:
   enabled: true
   image:
@@ -146,18 +261,32 @@ volumePermissions:
   securityContext:
     runAsUser: 0
 
+## teamcity service configuration
 service:
   type: ClusterIP
   port: 80
 
 ingress:
+  ## If true, teamcity Ingress will be created
+  ##
   enabled: false
+
+  ## teamcity Ingress annotations
+  ##
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+
+  ## teamcity Ingress hostnames with optional path
+  ## Must be provided if Ingress is enabled
+  ##
   hosts:
     - host: chart-example.local
       paths: []
+
+  ## teamcity Ingress TLS configuration
+  ## Secrets must be manually created in the namespace
+  ##
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
