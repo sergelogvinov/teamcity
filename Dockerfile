@@ -7,6 +7,7 @@ RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar ht
     echo "54397b7e08831e179e12d328e240ee15 /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip" | md5sum -c -
 
 RUN install -o tcuser -g tcuser -d /data -d /home/tcuser
+COPY --chown=tcuser:tcuser config/server.xml /opt/teamcity/conf/server.xml
 
 # USER tcuser
 WORKDIR /opt/teamcity
