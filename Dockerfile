@@ -1,5 +1,5 @@
 #
-FROM jetbrains/teamcity-server:2020.1.5 AS teamcity
+FROM jetbrains/teamcity-server:2020.2 AS teamcity
 
 RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar https://jdbc.postgresql.org/download/postgresql-42.2.16.jar && \
     echo "6d02942406e92153c6675617dade3524 /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar" | md5sum -c - && \
@@ -13,14 +13,11 @@ WORKDIR /opt/teamcity
 CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 #
-FROM jetbrains/teamcity-minimal-agent:2020.1.5  AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2020.2  AS teamcity-agent
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common vim curl wget git make zip rsync docker.io && \
-    apt-add-repository ppa:ansible/ansible && apt-get update -y && \
-    apt-get install -y ansible && \
-    apt-get install -y python-pip python-netaddr python-boto python-jmespath && \
-    pip install dopy && \
+    apt-get install -y ansible python3-pip python3-boto && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -28,9 +25,9 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-RUN wget https://dl.k8s.io/v1.19.3/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
+RUN wget https://dl.k8s.io/v1.19.4/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
-    wget https://get.helm.sh/helm-v3.3.4-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
+    wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/*
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
@@ -41,5 +38,4 @@ WORKDIR /home/buildagent
 USER buildagent
 COPY --chown=root:root             etc/ /etc/
 
-RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com && \
-    helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com
+RUN helm repo add stable https://charts.helm.sh/stable
