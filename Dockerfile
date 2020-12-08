@@ -17,10 +17,7 @@ FROM jetbrains/teamcity-minimal-agent:2020.2  AS teamcity-agent
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common vim curl wget git make zip rsync docker.io && \
-    apt-add-repository ppa:ansible/ansible && apt-get update -y && \
-    apt-get install -y ansible && \
-    apt-get install -y python-pip python-netaddr python-boto python-jmespath && \
-    pip install dopy && \
+    apt-get install -y ansible python3-pip python3-boto && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
