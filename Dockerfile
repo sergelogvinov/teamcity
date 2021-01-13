@@ -1,6 +1,7 @@
 #
 FROM jetbrains/teamcity-server:2020.2.1 AS teamcity
 
+USER root
 RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar https://jdbc.postgresql.org/download/postgresql-42.2.16.jar && \
     echo "6d02942406e92153c6675617dade3524 /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar" | md5sum -c - && \
     curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip https://bintray.com/pwielgolaski/generic/download_file?file_path=teamcity-oauth-1.1.9.zip && \
