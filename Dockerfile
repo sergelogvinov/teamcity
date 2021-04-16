@@ -1,5 +1,5 @@
 #
-FROM jetbrains/teamcity-server:2020.2.3 AS teamcity
+FROM jetbrains/teamcity-server:2020.2.4 AS teamcity
 
 USER root
 RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.16.jar https://jdbc.postgresql.org/download/postgresql-42.2.16.jar && \
@@ -15,7 +15,7 @@ WORKDIR /opt/teamcity
 CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 #
-FROM jetbrains/teamcity-minimal-agent:2020.2.3  AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2020.2.4  AS teamcity-agent
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common vim curl wget git make zip rsync docker.io && \
@@ -27,9 +27,9 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-RUN wget https://dl.k8s.io/v1.20.5/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
+RUN wget https://dl.k8s.io/v1.20.6/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
-    wget https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
+    wget https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/*
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
