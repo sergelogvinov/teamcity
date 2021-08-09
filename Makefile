@@ -5,7 +5,7 @@ BUILD_VCS_BRANCH?=$(shell git branch 2>/dev/null | sed -n '/^\*/s/^\* //p' | sed
 BUILD_VCS_NUMBER?=$(shell git rev-parse --short=7 HEAD)
 CODE_TAG?=$(shell git describe --exact-match --tags 2>/dev/null || git branch 2>/dev/null | sed -n '/^\*/s/^\* //p' | sed 's/\//-/g' | sed 's/^(HEAD detached at \(.*\))$$/\1-$(BUILD_VCS_NUMBER)/g')
 
-REGISTRY?=docker.pkg.github.com/sergelogvinov/teamcity
+REGISTRY?=ghcr.io/sergelogvinov
 DOCKER_HOST?=
 HELM_PARAMS?=
 
@@ -50,4 +50,3 @@ deploy:
 		--set server.image.tag=$(CODE_TAG) \
 		--set agent.image.tag=$(CODE_TAG) \
 		teamcity .helm/teamcity/
-

@@ -14,7 +14,7 @@ server:
   ## teamcity container image
   ##
   image:
-    repository: sergelog/teamcity
+    repository: ghcr.io/sergelogvinov/teamcity
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -131,7 +131,7 @@ agent:
   enabled: true
 
   image:
-    repository: sergelog/teamcity-agent
+    repository: ghcr.io/sergelogvinov/teamcity-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
