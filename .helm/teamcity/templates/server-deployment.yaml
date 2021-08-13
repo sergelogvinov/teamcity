@@ -31,29 +31,6 @@ spec:
       serviceAccountName: {{ include "teamcity.server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
-      {{- if or .Values.volumePermissions.enabled .Values.postgresql.enabled .Values.server.configDb  }}
-      initContainers:
-        - name: init-chmod-data
-          image: "{{ .Values.volumePermissions.image.image }}:{{ .Values.volumePermissions.image.imageTag }}"
-          imagePullPolicy: "{{ .Values.volumePermissions.image.pullPolicy }}"
-          resources:
-            limits:
-              cpu: 50m
-              memory: 32Mi
-            requests:
-              cpu: 50m
-              memory: 32Mi
-          command:
-            - sh
-            - -c
-            - |
-              chown -R {{ .Values.server.securityContext.runAsUser }}:{{ .Values.server.securityContext.runAsGroup }} /data
-          volumeMounts:
-            - name: data
-              mountPath: /data
-          securityContext:
-            runAsUser: {{ .Values.volumePermissions.securityContext.runAsUser }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-server
           securityContext:
