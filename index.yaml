@@ -3,6 +3,26 @@ entries:
   teamcity:
   - apiVersion: v2
     appVersion: release_2021.1.2
+    created: "2021-08-14T16:07:01.361720543Z"
+    description: Teamcity chart for Kubernetes
+    digest: 0560d39690935373103ee00ce329fe86248fd36f8f351e0c8d14c855fbdf129b
+    home: https://www.jetbrains.com/teamcity
+    keywords:
+    - ci
+    - continuous integration
+    - continuous delivery
+    - continuous deployment
+    - devops
+    - automation
+    name: teamcity
+    sources:
+    - https://github.com/sergelogvinov/teamcity
+    type: application
+    urls:
+    - https://github.com/sergelogvinov/teamcity/releases/download/teamcity-0.4.0/teamcity-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: release_2021.1.2
     created: "2021-08-09T10:05:43.88753143Z"
     description: Teamcity chart for Kubernetes
     digest: f692ed38b73cc98bf63e19f7942832bf34429cf8d81c1a8efb1c2eda4e718b92
