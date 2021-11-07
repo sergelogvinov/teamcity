@@ -1,12 +1,12 @@
-#
 # https://github.com/JetBrains/teamcity-docker-images
 #
-FROM jetbrains/teamcity-server:2021.1.2 AS teamcity
+
+FROM jetbrains/teamcity-server:2020.2.4 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
-RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.20.jar https://jdbc.postgresql.org/download/postgresql-42.2.20.jar && \
-    echo "f9422f7dd461ad9ab464bf326306fb52 /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.20.jar" | md5sum -c - && \
+RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.23.jar https://jdbc.postgresql.org/download/postgresql-42.2.23.jar && \
+    echo "b891abdb925d3553da695bbae54921ea /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.23.jar" | md5sum -c - && \
     curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip https://github.com/pwielgolaski/teamcity-oauth/releases/download/teamcity-oauth-1.1.9/teamcity-oauth-1.1.9.zip && \
     echo "54397b7e08831e179e12d328e240ee15 /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip" | md5sum -c -
 
@@ -19,7 +19,7 @@ CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2021.1.2 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2020.2.4  AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -33,9 +33,9 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-RUN wget https://dl.k8s.io/v1.22.0/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
+RUN wget https://dl.k8s.io/v1.22.3/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
-    wget https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
+    wget https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/* && \
     wget https://github.com/containerd/nerdctl/releases/download/v0.11.0/nerdctl-0.11.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
     echo "8c8a740295267bf50a322820ccf33fc1669337b03a544ae1e75bccb30f7705e1 /tmp/nerdctl.tar.gz" | sha256sum -c - && \
