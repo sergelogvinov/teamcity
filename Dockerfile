@@ -1,6 +1,6 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
-#
+
 FROM jetbrains/teamcity-server:2020.2.4 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
@@ -17,7 +17,8 @@ COPY --chown=tcuser:tcuser config/server.xml /opt/teamcity/conf/server.xml
 WORKDIR /opt/teamcity
 CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
-#
+###
+
 FROM jetbrains/teamcity-minimal-agent:2020.2.4  AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
