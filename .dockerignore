@@ -1,0 +1,7 @@
+.git/
+**/.gitignore
+**/.gitkeep
+#
+.github/
+.helm/
+Dockerfile

@@ -14,7 +14,7 @@ server:
   ## teamcity container image
   ##
   image:
-    repository: sergelog/teamcity
+    repository: ghcr.io/sergelogvinov/teamcity
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -50,6 +50,7 @@ server:
   ##
   podSecurityContext:
     fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
 
   ## Security context to be added to teamcity pods
   ##
@@ -131,7 +132,7 @@ agent:
   enabled: true
 
   image:
-    repository: sergelog/teamcity-agent
+    repository: ghcr.io/sergelogvinov/teamcity-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -187,6 +188,7 @@ agent:
   ##
   podSecurityContext:
     fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
 
   ## Security context to be added to teamcity agent pods
   ##
@@ -247,19 +249,6 @@ agent:
   ## Pod affinity
   ##
   affinity: {}
-
-##
-## Init containers parameters:
-## volumePermissions: Change the owner of the persist volume mountpoint to RunAsUser:fsGroup
-##
-volumePermissions:
-  enabled: true
-  image:
-    image: busybox
-    imageTag: latest
-    pullPolicy: IfNotPresent
-  securityContext:
-    runAsUser: 0
 
 ## teamcity service configuration
 service:
