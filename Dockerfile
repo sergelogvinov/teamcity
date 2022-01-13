@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2021.2.1 AS teamcity
+FROM jetbrains/teamcity-server:2021.2.2 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -19,7 +19,7 @@ CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2021.2.1 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2021.2.2 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -37,8 +37,8 @@ RUN wget https://dl.k8s.io/v1.22.4/kubernetes-client-linux-amd64.tar.gz -O /tmp/
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
     wget https://get.helm.sh/helm-v3.7.2-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/* && \
-    wget https://github.com/containerd/nerdctl/releases/download/v0.14.0/nerdctl-0.14.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
-    echo "4d3a2e9ecb9efd278313483e85e34e45605f4f8e61805480de440f69a298a649 /tmp/nerdctl.tar.gz" | sha256sum -c - && \
+    wget https://github.com/containerd/nerdctl/releases/download/v0.16.0/nerdctl-0.16.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
+    echo "00abb395a6c7c19f2e0612a65e413534b6ec42e995bfbcabd59886b99ca5e43e /tmp/nerdctl.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/nerdctl.tar.gz && mv nerdctl /usr/bin/nerdctl && rm -rf /tmp/* && \
     wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux -O /tmp/sops && \
     echo "6d4a087b325525f160c9a68fd2fd2df8 /tmp/sops" | md5sum -c - && \
