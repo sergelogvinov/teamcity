@@ -193,8 +193,8 @@ agent:
   ## Security context to be added to teamcity agent pods
   ##
   securityContext:
-    runAsUser: 1000
     runAsNonRoot: true
+    runAsUser: 1000
     runAsGroup: 1000
     # capabilities:
     #   drop:
@@ -259,6 +259,8 @@ ingress:
   ## If true, teamcity Ingress will be created
   ##
   enabled: false
+
+  className: ""
 
   ## teamcity Ingress annotations
   ##
