@@ -19,6 +19,14 @@ CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 ###
 
+FROM golang:1.18-bullseye AS helm
+
+WORKDIR /go/src/
+RUN git clone --single-branch --depth 2 --branch hooks-logs https://github.com/sergelogvinov/helm.git .
+RUN make
+
+###
+
 FROM jetbrains/teamcity-minimal-agent:2021.2.3 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
@@ -51,5 +59,6 @@ WORKDIR /home/buildagent
 
 USER buildagent
 
+COPY --from=helm --chown=root:root /go/src/bin/helm /usr/bin/helm
 COPY --chown=root:root etc/ /etc/
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.8.2
