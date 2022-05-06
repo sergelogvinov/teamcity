@@ -5,7 +5,7 @@ BUILD_VCS_BRANCH?=$(shell git branch 2>/dev/null | sed -n '/^\*/s/^\* //p' | sed
 BUILD_VCS_NUMBER?=$(shell git rev-parse --short=7 HEAD)
 CODE_TAG?=$(shell git describe --exact-match --tags 2>/dev/null || git branch 2>/dev/null | sed -n '/^\*/s/^\* //p' | sed 's/\//-/g' | sed 's/^(HEAD detached at \(.*\))$$/\1-$(BUILD_VCS_NUMBER)/g')
 
-REGISTRY?=ghcr.io/sergelogvinov
+REGISTRY?=ghcr.io/sergelogvinov/teamcity
 DOCKER_HOST?=
 HELM_PARAMS?=
 
