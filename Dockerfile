@@ -53,6 +53,8 @@ RUN wget https://dl.k8s.io/v1.22.4/kubernetes-client-linux-amd64.tar.gz -O /tmp/
     echo "6d4a087b325525f160c9a68fd2fd2df8 /tmp/sops" | md5sum -c - && \
     install -o root -g root /tmp/sops /usr/bin/sops && rm -rf /tmp/*
 
+COPY --from=aquasec/trivy:0.28.0 /usr/local/bin/trivy /usr/local/bin/trivy
+
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
 ENV DOCKER_HOST=tcp://docker:2376
 
