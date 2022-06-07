@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2022.04 AS teamcity
+FROM jetbrains/teamcity-server:2022.04.1 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2022.04 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2022.04.1 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -41,19 +41,19 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-RUN wget https://dl.k8s.io/v1.22.4/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
+RUN wget https://dl.k8s.io/v1.22.10/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
     wget https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
     echo "6cb9a48f72ab9ddfecab88d264c2f6508ab3cd42d9c09666be16a7bf006bed7b /tmp/helm.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/* && \
-    wget https://github.com/containerd/nerdctl/releases/download/v0.19.0/nerdctl-0.19.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
-    echo "9cf4d1a2b18baf0c713d7746f896fd6a9d18a130ea8f590c6ed11474748b1733 /tmp/nerdctl.tar.gz" | sha256sum -c - && \
+    wget https://github.com/containerd/nerdctl/releases/download/v0.20.0/nerdctl-0.20.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
+    echo "e23d50316f9e268ca4a21bd4614a544f53b2cecf352144ceefa038da512bb29a /tmp/nerdctl.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/nerdctl.tar.gz && mv nerdctl /usr/bin/nerdctl && rm -rf /tmp/* && \
     wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux -O /tmp/sops && \
     echo "6d4a087b325525f160c9a68fd2fd2df8 /tmp/sops" | md5sum -c - && \
     install -o root -g root /tmp/sops /usr/bin/sops && rm -rf /tmp/*
 
-COPY --from=aquasec/trivy:0.28.0 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=aquasec/trivy:0.28.1 /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
 ENV DOCKER_HOST=tcp://docker:2376
