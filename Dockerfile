@@ -1,12 +1,12 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2022.04.1 AS teamcity
+FROM jetbrains/teamcity-server:2022.04.2 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
-RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.23.jar https://jdbc.postgresql.org/download/postgresql-42.2.23.jar && \
-    echo "b891abdb925d3553da695bbae54921ea /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.23.jar" | md5sum -c - && \
+RUN curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.24.jar https://jdbc.postgresql.org/download/postgresql-42.2.24.jar && \
+    echo "d4b3ff46a918dee03de95bca5d8edab0 /opt/teamcity/webapps/ROOT/WEB-INF/lib/postgresql-42.2.24.jar" | md5sum -c - && \
     curl -LfsSo /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip https://github.com/pwielgolaski/teamcity-oauth/releases/download/teamcity-oauth-1.1.9/teamcity-oauth-1.1.9.zip && \
     echo "54397b7e08831e179e12d328e240ee15 /opt/teamcity/webapps/ROOT/WEB-INF/plugins/teamcity-oauth-1.1.9.zip" | md5sum -c -
 
@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2022.04.1 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2022.04.2 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -41,19 +41,19 @@ RUN apt-get update && apt-get install -y software-properties-common vim curl wge
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-RUN wget https://dl.k8s.io/v1.22.10/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
+RUN wget https://dl.k8s.io/v1.23.3/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
-    wget https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
-    echo "6cb9a48f72ab9ddfecab88d264c2f6508ab3cd42d9c09666be16a7bf006bed7b /tmp/helm.tar.gz" | sha256sum -c - && \
+    wget https://get.helm.sh/helm-v3.9.1-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
+    echo "73df7ddd5ab05e96230304bf0e6e31484b1ba136d0fc22679345c0b4bd43f7ac /tmp/helm.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/* && \
-    wget https://github.com/containerd/nerdctl/releases/download/v0.20.0/nerdctl-0.20.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
-    echo "e23d50316f9e268ca4a21bd4614a544f53b2cecf352144ceefa038da512bb29a /tmp/nerdctl.tar.gz" | sha256sum -c - && \
+    wget https://github.com/containerd/nerdctl/releases/download/v0.21.0/nerdctl-0.21.0-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
+    echo "686aee1161d9bf4865f391aaa4957d416df13f00493d67797e1ee8aad68cd057 /tmp/nerdctl.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/nerdctl.tar.gz && mv nerdctl /usr/bin/nerdctl && rm -rf /tmp/* && \
     wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux -O /tmp/sops && \
     echo "6d4a087b325525f160c9a68fd2fd2df8 /tmp/sops" | md5sum -c - && \
     install -o root -g root /tmp/sops /usr/bin/sops && rm -rf /tmp/*
 
-COPY --from=aquasec/trivy:0.28.1 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=aquasec/trivy:0.29.2 /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
 ENV DOCKER_HOST=tcp://docker:2376
