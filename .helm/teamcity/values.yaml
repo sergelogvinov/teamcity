@@ -283,6 +283,22 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+metrics:
+  enabled: false
+
+  username: prometheus
+  password: prometheus
+
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: 1.23.0-alpine
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 101
+
 # PostgreSQL chart documentation:
 # https://github.com/helm/charts/blob/master/stable/postgresql/README.md
 postgresql:
