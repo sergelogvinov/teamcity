@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2022.10.2 AS teamcity
+FROM jetbrains/teamcity-server:2022.10.3 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2022.10.2 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2022.10.3 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -56,7 +56,7 @@ RUN wget https://dl.k8s.io/v1.23.16/kubernetes-client-linux-amd64.tar.gz -O /tmp
 
 COPY --from=docker:20.10-cli /usr/libexec/docker/cli-plugins/docker-compose /usr/libexec/docker/cli-plugins/docker-compose
 COPY --from=docker/buildx-bin:0.10.4 /buildx /usr/libexec/docker/cli-plugins/docker-buildx
-COPY --from=aquasec/trivy:0.38.2 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=aquasec/trivy:0.38.3 /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
 ENV DOCKER_HOST=tcp://docker:2376
