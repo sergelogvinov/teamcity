@@ -19,7 +19,7 @@ CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 ###
 
-FROM golang:1.18-bullseye AS helm
+FROM golang:1.20-bullseye AS helm
 
 WORKDIR /go/src/
 RUN git clone --single-branch --depth 2 --branch hooks-logs https://github.com/sergelogvinov/helm.git .
