@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2022.10.3 AS teamcity
+FROM jetbrains/teamcity-server:2023.05 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2022.10.3 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2023.05 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -41,11 +41,11 @@ RUN apt-get update && apt-get install -y software-properties-common vim-tiny cur
 RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
-ARG HELM_VERSION=3.11.2 NERDCTL_VERSION=1.2.1
+ARG HELM_VERSION=3.12.0 NERDCTL_VERSION=1.2.1
 RUN wget https://dl.k8s.io/v1.23.16/kubernetes-client-linux-amd64.tar.gz -O /tmp/kubernetes-client-linux-amd64.tar.gz && \
     cd /tmp && tar -xzf /tmp/kubernetes-client-linux-amd64.tar.gz && mv kubernetes/client/bin/kubectl /usr/bin/kubectl && \
     wget https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -O /tmp/helm.tar.gz && \
-    echo "781d826daec584f9d50a01f0f7dadfd25a3312217a14aa2fbb85107b014ac8ca /tmp/helm.tar.gz" | sha256sum -c - && \
+    echo "da36e117d6dbc57c8ec5bab2283222fbd108db86c83389eebe045ad1ef3e2c3b /tmp/helm.tar.gz" | sha256sum -c - && \
     cd /tmp && tar -xzf /tmp/helm.tar.gz && mv linux-amd64/helm /usr/bin/helm && rm -rf /tmp/* && \
     wget https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz -O /tmp/nerdctl.tar.gz && \
     echo "67aa5cf2a32a3dc0c335b96133daee4d2764d9c1a4d86a38398c4995d2df2176 /tmp/nerdctl.tar.gz" | sha256sum -c - && \
@@ -54,9 +54,9 @@ RUN wget https://dl.k8s.io/v1.23.16/kubernetes-client-linux-amd64.tar.gz -O /tmp
     echo "913515e57d0112840540dc3c56370ff9 /tmp/sops" | md5sum -c - && \
     install -o root -g root /tmp/sops /usr/bin/sops && rm -rf /tmp/*
 
-COPY --from=docker:20.10-cli /usr/libexec/docker/cli-plugins/docker-compose /usr/libexec/docker/cli-plugins/docker-compose
-COPY --from=docker/buildx-bin:0.10.4 /buildx /usr/libexec/docker/cli-plugins/docker-buildx
-COPY --from=aquasec/trivy:0.38.3 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=docker:23.0.6-cli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/libexec/docker/cli-plugins/docker-compose
+COPY --from=docker/buildx-bin:0.10.4 /buildx /usr/local/libexec/docker/cli-plugins/docker-buildx
+COPY --from=ghcr.io/aquasecurity/trivy:0.41.0 /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENV CONFIG_FILE=/home/buildagent/conf/buildAgent.properties
 ENV DOCKER_HOST=tcp://docker:2376
@@ -69,4 +69,7 @@ USER buildagent
 COPY --from=helm --chown=root:root /go/src/bin/helm /usr/bin/helm
 
 COPY --chown=root:root etc/ /etc/
-RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.15.0
+RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.15.0 && \
+    helm repo add bitnami  https://charts.bitnami.com/bitnami && \
+    helm repo add sinextra https://helm-charts.sinextra.dev && \
+    helm repo update
