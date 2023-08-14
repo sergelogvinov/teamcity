@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2023.05.2 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2023.05-nanoserver-2004 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
