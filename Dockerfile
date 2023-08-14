@@ -58,7 +58,7 @@ WORKDIR /home/buildagent
 USER buildagent
 
 # helm hooks error log https://github.com/helm/helm/pull/11228
-COPY --from=helm --chown=root:root /go/src/bin/helm /usr/bin/helm
+# COPY --from=helm --chown=root:root /go/src/bin/helm /usr/bin/helm
 
 COPY --chown=root:root etc/ /etc/
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.15.0 && \
