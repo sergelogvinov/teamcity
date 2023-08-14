@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2023.05.2 AS teamcity
+FROM jetbrains/teamcity-server:2023.05-nanoserver-2004 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
