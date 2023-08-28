@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 #
 
-FROM jetbrains/teamcity-server:2023.05.2 AS teamcity
+FROM jetbrains/teamcity-server:2023.05.3 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -27,7 +27,7 @@ RUN make
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2023.05.2 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2023.05.3 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -42,11 +42,11 @@ RUN mkdir -p /home/buildagent/conf /home/buildagent/.ansible && \
     chown -R buildagent.buildagent /opt/buildagent /home/buildagent
 
 COPY --from=docker:23.0.6-cli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/libexec/docker/cli-plugins/docker-compose
-COPY --from=docker/buildx-bin:0.10.4 /buildx /usr/local/libexec/docker/cli-plugins/docker-buildx
-COPY --from=ghcr.io/aquasecurity/trivy:0.42.1 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=docker/buildx-bin:0.11.2 /buildx /usr/local/libexec/docker/cli-plugins/docker-buildx
+COPY --from=ghcr.io/aquasecurity/trivy:0.44.1 /usr/local/bin/trivy /usr/local/bin/trivy
 
-COPY --from=bitnami/kubectl:1.24.15 /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
-COPY --from=alpine/helm:3.12.1 /usr/bin/helm /usr/bin/helm
+COPY --from=bitnami/kubectl:1.26.8 /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
+COPY --from=alpine/helm:3.12.3 /usr/bin/helm /usr/bin/helm
 COPY --from=ghcr.io/sergelogvinov/sops:3.7.3  /usr/bin/sops /usr/bin/sops
 COPY --from=ghcr.io/sergelogvinov/vals:0.25.0 /usr/bin/vals /usr/bin/vals
 
