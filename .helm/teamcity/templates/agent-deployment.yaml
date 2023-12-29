@@ -85,13 +85,16 @@ spec:
           args:
             - --config-file=/etc/docker-config/daemon.json
             - --group={{ .Values.agent.securityContext.runAsGroup }}
+          env:
+            - name: DOCKER_HOST
+              value: unix:///tmp/docker.sock
           volumeMounts:
             - name: config
               mountPath: /etc/docker-config
             - name: docker
               mountPath: /var/lib/docker
             - name: run
-              mountPath: /run
+              mountPath: /tmp
             - name: modules
               mountPath: /lib/modules
               readOnly: true
