@@ -250,6 +250,44 @@ agent:
   ##
   affinity: {}
 
+dind:
+  enabled: true
+
+  # -- Docker in Docker image.
+  # ref: https://hub.docker.com/_/docker/tags?page=1&name=dind
+  image:
+    repository: docker
+    pullPolicy: IfNotPresent
+    tag: 24.0-dind
+
+  # -- Resource requests and limits.
+  # ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 256Mi
+
+  # -- Additional container volume mounts.
+  extraVolumeMounts: []
+  # -- Additional volumes.
+  extraVolumes: []
+
+  # -- Persistence parameters for source code
+  # ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  persistence:
+    enabled: false
+    ## A manually managed Persistent Volume and Claim
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+    # storageClass: "-"
+    accessModes:
+      - ReadWriteOnce
+    size: 100Gi
+    annotations: {}
+
 ## teamcity service configuration
 service:
   type: ClusterIP
