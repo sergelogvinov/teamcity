@@ -126,14 +126,12 @@ spec:
           ephemeral:
             volumeClaimTemplate:
               metadata:
-                labels:
-                  {{- include "teamcity.labels" . | nindent 22 }}
-              {{- with .Values.dind.persistence.annotations }}
+                {{- with .Values.dind.persistence.annotations }}
                 annotations:
-                {{- range $key, $value := . }}
-                  {{ $key }}: {{ $value }}
+                  {{- toYaml . | nindent 18 }}
                 {{- end }}
-              {{- end }}
+                labels:
+                  {{- include "teamcity.labels" . | nindent 18 }}
               {{- include "volumeClaimTemplate.spec.render" .Values.dind.persistence | nindent 14 }}
         {{- else }}
           emptyDir: {}

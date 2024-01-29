@@ -9,7 +9,7 @@ metadata:
     {{- include "teamcity.labels" . | nindent 4 }}
   {{- if .Values.server.persistentVolume.annotations }}
   annotations:
-{{ toYaml .Values.server.persistentVolume.annotations | indent 4 }}
+    {{- toYaml .Values.server.persistentVolume.annotations | indent 8 }}
   {{- end }}
 spec:
   accessModes:
