@@ -1,7 +1,7 @@
 # https://github.com/JetBrains/teamcity-docker-images
 # https://hub.docker.com/r/jetbrains/teamcity-server/tags
 
-FROM jetbrains/teamcity-server:2023.11.2 AS teamcity
+FROM jetbrains/teamcity-server:2023.11.3 AS teamcity
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
@@ -19,7 +19,7 @@ CMD ["/opt/teamcity/bin/teamcity-server.sh","run"]
 
 ###
 
-FROM jetbrains/teamcity-minimal-agent:2023.11.2 AS teamcity-agent
+FROM jetbrains/teamcity-minimal-agent:2023.11.3 AS teamcity-agent
 LABEL org.opencontainers.image.source https://github.com/sergelogvinov/teamcity
 
 USER root
