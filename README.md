@@ -1,5 +1,8 @@
 # TeamCity helm chart
 
+Depricated.
+Moved to [Helm charts](https://github.com/sergelogvinov/helm-charts) repository.
+
 ## Deploy TeamCity to kubernetes
 
 Build you own images and push it to registry
